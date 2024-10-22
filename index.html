@@ -31,7 +31,7 @@
     <script>
         function calculateAge(birthdate) {
             const today = new Date();
-            const birthDate = new Date(birthdate);
+            const birthDate = new Date(Date.UTC(new Date(birthdate).getFullYear(), new Date(birthdate).getMonth(), new Date(birthdate).getDate())); // Use UTC to avoid time zone issues
             let age = today.getFullYear() - birthDate.getFullYear();
             const monthDifference = today.getMonth() - birthDate.getMonth();
             if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
@@ -42,7 +42,7 @@
 
         function calculateNextAge(birthdate) {
             const today = new Date();
-            const birthDate = new Date(birthdate);
+            const birthDate = new Date(Date.UTC(new Date(birthdate).getFullYear(), new Date(birthdate).getMonth(), new Date(birthdate).getDate())); // Use UTC to avoid time zone issues
             const currentAge = calculateAge(birthdate);
             const monthDifference = today.getMonth() - birthDate.getMonth();
             const isUpcoming = monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate());
@@ -54,8 +54,8 @@
             let closest = null;
             let closestDate = null;
             for (let birthdate of birthdates) {
-                const bdayThisYear = new Date(today.getFullYear(), new Date(birthdate.date).getMonth(), new Date(birthdate.date).getDate());
-                const bdayNextYear = new Date(today.getFullYear() + 1, new Date(birthdate.date).getMonth(), new Date(birthdate.date).getDate());
+                const bdayThisYear = new Date(Date.UTC(today.getFullYear(), new Date(birthdate.date).getMonth(), new Date(birthdate.date).getDate()));
+                const bdayNextYear = new Date(Date.UTC(today.getFullYear() + 1, new Date(birthdate.date).getMonth(), new Date(birthdate.date).getDate()));
 
                 const diffThisYear = bdayThisYear - today;
                 const diffNextYear = bdayNextYear - today;
@@ -72,8 +72,8 @@
 
         function sortByDate(birthdates) {
             return birthdates.sort((a, b) => {
-                const dateA = new Date(a.date).setFullYear(0); // Ignore the year
-                const dateB = new Date(b.date).setFullYear(0);
+                const dateA = new Date(Date.UTC(new Date(a.date).getFullYear(), new Date(a.date).getMonth(), new Date(a.date).getDate())).setFullYear(0); // Ignore the year
+                const dateB = new Date(Date.UTC(new Date(b.date).getFullYear(), new Date(b.date).getMonth(), new Date(b.date).getDate())).setFullYear(0);
                 return dateA - dateB;
             });
         }
