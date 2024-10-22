@@ -13,7 +13,7 @@
             color: #2c3e50;
         }
         table {
-            width: 60%;
+            width: 70%;
             border-collapse: collapse;
             margin: 20px 0;
         }
@@ -38,6 +38,15 @@
                 age--;
             }
             return age;
+        }
+
+        function calculateNextAge(birthdate) {
+            const today = new Date();
+            const birthDate = new Date(birthdate);
+            const currentAge = calculateAge(birthdate);
+            const monthDifference = today.getMonth() - birthDate.getMonth();
+            const isUpcoming = monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate());
+            return isUpcoming ? currentAge + 1 : currentAge + 1;
         }
 
         function getNextBirthday(birthdates) {
@@ -97,82 +106,98 @@
         <tr>
             <th>Name</th>
             <th>Birthdate</th>
-            <th>Age</th>
+            <th>Current Age</th>
+            <th>Next Age</th>
         </tr>
         <tr>
             <td>Leon</td>
             <td>February 19, 2020</td>
             <td><script>document.write(calculateAge('2020-02-19'));</script></td>
+            <td><script>document.write(calculateNextAge('2020-02-19'));</script></td>
         </tr>
         <tr>
             <td>Miran</td>
             <td>March 4, 1938</td>
             <td><script>document.write(calculateAge('1938-03-04'));</script></td>
+            <td><script>document.write(calculateNextAge('1938-03-04'));</script></td>
         </tr>
         <tr>
             <td>Daphne</td>
             <td>April 20, 2016</td>
             <td><script>document.write(calculateAge('2016-04-20'));</script></td>
+            <td><script>document.write(calculateNextAge('2016-04-20'));</script></td>
         </tr>
         <tr>
             <td>Brother</td>
             <td>March 15, 1988</td>
             <td><script>document.write(calculateAge('1988-03-15'));</script></td>
+            <td><script>document.write(calculateNextAge('1988-03-15'));</script></td>
         </tr>
         <tr>
             <td>Jordan</td>
             <td>July 30, 1982</td>
             <td><script>document.write(calculateAge('1982-07-30'));</script></td>
+            <td><script>document.write(calculateNextAge('1982-07-30'));</script></td>
         </tr>
         <tr>
             <td>Ginny</td>
             <td>August 29, 1945</td>
             <td><script>document.write(calculateAge('1945-08-29'));</script></td>
+            <td><script>document.write(calculateNextAge('1945-08-29'));</script></td>
         </tr>
         <tr>
             <td>Enzo</td>
             <td>September 4, 2014</td>
             <td><script>document.write(calculateAge('2014-09-04'));</script></td>
+            <td><script>document.write(calculateNextAge('2014-09-04'));</script></td>
         </tr>
         <tr>
             <td>Cody</td>
             <td>September 19, 2022</td>
             <td><script>document.write(calculateAge('2022-09-19'));</script></td>
+            <td><script>document.write(calculateNextAge('2022-09-19'));</script></td>
         </tr>
         <tr>
             <td>Vada</td>
             <td>October 29, 2012</td>
             <td><script>document.write(calculateAge('2012-10-29'));</script></td>
+            <td><script>document.write(calculateNextAge('2012-10-29'));</script></td>
         </tr>
         <tr>
             <td>Mom</td>
             <td>October 6, 1956</td>
             <td><script>document.write(calculateAge('1956-10-06'));</script></td>
+            <td><script>document.write(calculateNextAge('1956-10-06'));</script></td>
         </tr>
         <tr>
             <td>Dad</td>
             <td>October 18, 1953</td>
             <td><script>document.write(calculateAge('1953-10-18'));</script></td>
+            <td><script>document.write(calculateNextAge('1953-10-18'));</script></td>
         </tr>
         <tr>
             <td>Renea</td>
             <td>November 3, 2017</td>
             <td><script>document.write(calculateAge('2017-11-03'));</script></td>
+            <td><script>document.write(calculateNextAge('2017-11-03'));</script></td>
         </tr>
         <tr>
             <td>Wife</td>
             <td>December 2, 1983</td>
             <td><script>document.write(calculateAge('1983-12-02'));</script></td>
+            <td><script>document.write(calculateNextAge('1983-12-02'));</script></td>
         </tr>
         <tr>
             <td>Rozy</td>
             <td>December 16, 1981</td>
             <td><script>document.write(calculateAge('1981-12-16'));</script></td>
+            <td><script>document.write(calculateNextAge('1981-12-16'));</script></td>
         </tr>
         <tr>
             <td>Tammy</td>
             <td>December 23, 1956</td>
             <td><script>document.write(calculateAge('1956-12-23'));</script></td>
+            <td><script>document.write(calculateNextAge('1956-12-23'));</script></td>
         </tr>
     </table>
 </body>
