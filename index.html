@@ -24,6 +24,9 @@
         th {
             background-color: #f2f2f2;
         }
+        .upcoming {
+            background-color: #ffeb3b; /* Highlight color for the next upcoming birthday */
+        }
     </style>
     <script>
         function calculateAge(birthdate) {
@@ -36,6 +39,56 @@
             }
             return age;
         }
+
+        function getNextBirthday(birthdates) {
+            const today = new Date();
+            let closest = null;
+            let closestDate = null;
+            for (let birthdate of birthdates) {
+                const bdayThisYear = new Date(today.getFullYear(), new Date(birthdate.date).getMonth(), new Date(birthdate.date).getDate());
+                const bdayNextYear = new Date(today.getFullYear() + 1, new Date(birthdate.date).getMonth(), new Date(birthdate.date).getDate());
+
+                const diffThisYear = bdayThisYear - today;
+                const diffNextYear = bdayNextYear - today;
+
+                const diff = diffThisYear >= 0 ? diffThisYear : diffNextYear;
+
+                if (closest === null || diff < closest) {
+                    closest = diff;
+                    closestDate = birthdate;
+                }
+            }
+            return closestDate.name;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const birthdates = [
+                { name: 'Cody', date: '2022-09-19' },
+                { name: 'Enzo', date: '2014-09-04' },
+                { name: 'Ginny', date: '1945-08-29' },
+                { name: 'Jordan', date: '1982-07-30' },
+                { name: 'Daphne', date: '2016-04-20' },
+                { name: 'Leon', date: '2020-02-19' },
+                { name: 'Miran', date: '1938-03-04' },
+                { name: 'Vada', date: '2012-10-29' },
+                { name: 'Renea', date: '2017-11-03' },
+                { name: 'Wife', date: '1983-12-02' },
+                { name: 'Rozy', date: '1981-12-16' },
+                { name: 'Tammy', date: '1956-12-23' },
+                { name: 'Mom', date: '1956-10-06' },
+                { name: 'Dad', date: '1953-10-18' },
+                { name: 'Brother', date: '1988-03-15' }
+            ];
+
+            const nextBirthdayName = getNextBirthday(birthdates);
+
+            // Highlight the row for the next birthday
+            document.querySelectorAll('tr').forEach(row => {
+                if (row.textContent.includes(nextBirthdayName)) {
+                    row.classList.add('upcoming');
+                }
+            });
+        });
     </script>
 </head>
 <body>
@@ -60,6 +113,11 @@
             <td>Daphne</td>
             <td>April 20, 2016</td>
             <td><script>document.write(calculateAge('2016-04-20'));</script></td>
+        </tr>
+        <tr>
+            <td>Brother</td>
+            <td>March 15, 1988</td>
+            <td><script>document.write(calculateAge('1988-03-15'));</script></td>
         </tr>
         <tr>
             <td>Jordan</td>
@@ -87,6 +145,16 @@
             <td><script>document.write(calculateAge('2012-10-29'));</script></td>
         </tr>
         <tr>
+            <td>Mom</td>
+            <td>October 6, 1956</td>
+            <td><script>document.write(calculateAge('1956-10-06'));</script></td>
+        </tr>
+        <tr>
+            <td>Dad</td>
+            <td>October 18, 1953</td>
+            <td><script>document.write(calculateAge('1953-10-18'));</script></td>
+        </tr>
+        <tr>
             <td>Renea</td>
             <td>November 3, 2017</td>
             <td><script>document.write(calculateAge('2017-11-03'));</script></td>
@@ -105,21 +173,6 @@
             <td>Tammy</td>
             <td>December 23, 1956</td>
             <td><script>document.write(calculateAge('1956-12-23'));</script></td>
-        </tr>
-        <tr>
-            <td>Mom</td>
-            <td>October 6, 1956</td>
-            <td><script>document.write(calculateAge('1956-10-06'));</script></td>
-        </tr>
-        <tr>
-            <td>Dad</td>
-            <td>October 18, 1953</td>
-            <td><script>document.write(calculateAge('1953-10-18'));</script></td>
-        </tr>
-        <tr>
-            <td>Brother</td>
-            <td>March 15, 1988</td>
-            <td><script>document.write(calculateAge('1988-03-15'));</script></td>
         </tr>
     </table>
 </body>
