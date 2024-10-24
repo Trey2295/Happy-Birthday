@@ -123,6 +123,12 @@
             });
 
             document.getElementById('family-table').innerHTML = tableContent;
+
+            // Scroll to the highlighted (upcoming) row
+            const upcomingRow = document.querySelector('.upcoming');
+            if (upcomingRow) {
+                upcomingRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         });
     </script>
 </head>
