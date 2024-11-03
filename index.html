@@ -77,20 +77,23 @@
             let closest = null;
             let closestDate = null;
             for (let birthdate of birthdates) {
+                // Skip if today is their birthday
+                if (isTodayBirthday(birthdate.date)) continue;
+        
                 const bdayThisYear = createUTCDateFromString(`${today.getFullYear()}-${birthdate.date.split('-')[1]}-${birthdate.date.split('-')[2]}`);
                 const bdayNextYear = createUTCDateFromString(`${today.getFullYear() + 1}-${birthdate.date.split('-')[1]}-${birthdate.date.split('-')[2]}`);
-
+        
                 const diffThisYear = bdayThisYear - today;
                 const diffNextYear = bdayNextYear - today;
-
+        
                 const diff = diffThisYear >= 0 ? diffThisYear : diffNextYear;
-
+        
                 if (closest === null || diff < closest) {
                     closest = diff;
                     closestDate = birthdate;
                 }
             }
-            return closestDate.name;
+            return closestDate ? closestDate.name : null; // Return null if today's birthday is present
         }
 
         function sortByDate(birthdates) {
@@ -102,36 +105,38 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            const birthdates = [
-                { name: 'Leon', date: '2020-02-19', birthdateDisplay: 'February 19, 2020' },
-                { name: 'Miran', date: '1938-03-04', birthdateDisplay: 'March 4, 1938' },
-                { name: 'Brother', date: '1988-03-15', birthdateDisplay: 'March 15, 1988' },
-                { name: 'Daphne', date: '2016-04-20', birthdateDisplay: 'April 20, 2016' },
-                { name: 'Jordan', date: '1982-07-30', birthdateDisplay: 'July 30, 1982' },
-                { name: 'Ginny', date: '1945-08-29', birthdateDisplay: 'August 29, 1945' },
-                { name: 'Enzo', date: '2014-09-04', birthdateDisplay: 'September 4, 2014' },
-                { name: 'Cody', date: '2022-09-19', birthdateDisplay: 'September 19, 2022' },
-                { name: 'Vada', date: '2012-10-29', birthdateDisplay: 'October 29, 2012' },
-                { name: 'Mom', date: '1956-10-06', birthdateDisplay: 'October 6, 1956' },
-                { name: 'Dad', date: '1953-10-18', birthdateDisplay: 'October 18, 1953' },
-                { name: 'Renae', date: '2017-11-03', birthdateDisplay: 'November 3, 2017' },
-                { name: 'Wife', date: '1983-12-02', birthdateDisplay: 'December 2, 1983' },
-                { name: 'Rozy', date: '1981-12-16', birthdateDisplay: 'December 16, 1981' },
-                { name: 'Tammy', date: '1956-12-23', birthdateDisplay: 'December 23, 1956' },
-                { name: 'Laurie', date: '1990-02-04', birthdateDisplay: 'February 4, 1990' } // Added Laurie
-            ];
-
-            const sortedBirthdates = sortByDate(birthdates);
-            const nextBirthdayName = getNextBirthday(birthdates);
-
-            let tableContent = '';
-            sortedBirthdates.forEach(birthdate => {
+        const birthdates = [
+            { name: 'Leon', date: '2020-02-19', birthdateDisplay: 'February 19, 2020' },
+            { name: 'Miran', date: '1938-03-04', birthdateDisplay: 'March 4, 1938' },
+            { name: 'Brother', date: '1988-03-15', birthdateDisplay: 'March 15, 1988' },
+            { name: 'Daphne', date: '2016-04-20', birthdateDisplay: 'April 20, 2016' },
+            { name: 'Jordan', date: '1982-07-30', birthdateDisplay: 'July 30, 1982' },
+            { name: 'Ginny', date: '1945-08-29', birthdateDisplay: 'August 29, 1945' },
+            { name: 'Enzo', date: '2014-09-04', birthdateDisplay: 'September 4, 2014' },
+            { name: 'Cody', date: '2022-09-19', birthdateDisplay: 'September 19, 2022' },
+            { name: 'Vada', date: '2012-10-29', birthdateDisplay: 'October 29, 2012' },
+            { name: 'Mom', date: '1956-10-06', birthdateDisplay: 'October 6, 1956' },
+            { name: 'Dad', date: '1953-10-18', birthdateDisplay: 'October 18, 1953' },
+            { name: 'Renae', date: '2017-11-03', birthdateDisplay: 'November 3, 2017' },
+            { name: 'Wife', date: '1983-12-02', birthdateDisplay: 'December 2, 1983' },
+            { name: 'Rozy', date: '1981-12-16', birthdateDisplay: 'December 16, 1981' },
+            { name: 'Tammy', date: '1956-12-23', birthdateDisplay: 'December 23, 1956' },
+            { name: 'Laurie', date: '1990-02-04', birthdateDisplay: 'February 4, 1990' }
+        ];
+    
+        const sortedBirthdates = sortByDate(birthdates);
+        const nextBirthdayName = getNextBirthday(birthdates);
+    
+        let tableContent = '';
+        let hasTodayBirthday = false;
+        sortedBirthdates.forEach(birthdate => {
             const currentAge = calculateAge(birthdate.date);
             const nextAge = calculateNextAge(birthdate.date);
-        
-            // Apply 'blinking' if today is their birthday, otherwise 'upcoming' for the next birthday
+            
+            // Apply 'blinking' if today is their birthday
             const rowClass = isTodayBirthday(birthdate.date) ? 'class="blinking"' : (birthdate.name === nextBirthdayName ? 'class="upcoming"' : '');
-        
+            if (isTodayBirthday(birthdate.date)) hasTodayBirthday = true;
+    
             tableContent += `
                 <tr ${rowClass}>
                     <td>${birthdate.name}</td>
@@ -142,14 +147,16 @@
             `;
         });
 
-            document.getElementById('family-table').innerHTML = tableContent;
+    document.getElementById('family-table').innerHTML = tableContent;
 
-            // Scroll to the highlighted (upcoming) row
-            const upcomingRow = document.querySelector('.upcoming');
-            if (upcomingRow) {
-                upcomingRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        });
+    // Scroll to the highlighted (upcoming) row only if there is no blinking row
+    if (!hasTodayBirthday) {
+        const upcomingRow = document.querySelector('.upcoming');
+        if (upcomingRow) {
+            upcomingRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+});
     </script>
 </head>
 <body>
