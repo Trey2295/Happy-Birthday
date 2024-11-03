@@ -88,11 +88,18 @@
                 { name: 'Laurie', date: '1990-02-04', birthdateDisplay: 'February 4, 1990' }
             ];
 
-            const nextBirthdayName = getNextBirthday(birthdates);
+            cconst nextBirthdayName = getNextBirthday(birthdates);
 
             let tableContent = '';
             birthdates.forEach(birthdate => {
-                const rowClass = isTodayBirthday(birthdate.date) ? 'class="blinking"' : (birthdate.name === nextBirthdayName ? 'class="upcoming"' : '');
+                let rowClasses = [];
+                if (isTodayBirthday(birthdate.date)) {
+                    rowClasses.push('blinking');
+                } else if (birthdate.name === nextBirthdayName) {
+                    rowClasses.push('upcoming');
+                }
+                
+                const rowClass = rowClasses.length > 0 ? `class="${rowClasses.join(' ')}"` : '';
                 
                 tableContent += `
                     <tr ${rowClass}>
@@ -103,13 +110,13 @@
                     </tr>
                 `;
             });
-
+        
             document.getElementById('family-table').innerHTML = tableContent;
-
-            // Scroll to the next upcoming birthday row, if any
-            const upcomingRow = document.querySelector('.upcoming');
-            if (upcomingRow) {
-                upcomingRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+            // Scroll to the birthday row (today's birthday or next upcoming)
+            const birthdayRow = document.querySelector('.blinking') || document.querySelector('.upcoming');
+            if (birthdayRow) {
+                birthdayRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
 
