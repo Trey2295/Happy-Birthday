@@ -53,14 +53,18 @@
             const today = new Date();
             let closestDate = null;
             let closestDiff = Infinity;
-
+        
             for (let birthdate of birthdates) {
+                if (isTodayBirthday(birthdate.date)) {
+                    return birthdate.name; // Return immediately if today is someone's birthday
+                }
+        
                 const bdayThisYear = createUTCDateFromString(`${today.getFullYear()}-${birthdate.date.split('-')[1]}-${birthdate.date.split('-')[2]}`);
                 const bdayNextYear = createUTCDateFromString(`${today.getFullYear() + 1}-${birthdate.date.split('-')[1]}-${birthdate.date.split('-')[2]}`);
-
-                const diff = bdayThisYear >= today ? bdayThisYear - today : bdayNextYear - today;
-
-                if (diff < closestDiff && diff > 0) {
+        
+                const diff = bdayThisYear > today ? bdayThisYear - today : bdayNextYear - today;
+        
+                if (diff < closestDiff) {
                     closestDiff = diff;
                     closestDate = birthdate;
                 }
