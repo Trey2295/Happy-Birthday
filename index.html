@@ -38,10 +38,9 @@
         }
     </style>
     <script>
-        // Helper function to create a UTC date without timezone shift
         function createUTCDateFromString(dateString) {
-            const [year, month, day] = dateString.split('-').map(Number); // Extract year, month, day
-            return new Date(Date.UTC(year, month - 1, day)); // Month is 0-indexed in JavaScript, so subtract 1
+            const [year, month, day] = dateString.split('-').map(Number);
+            return new Date(Date.UTC(year, month - 1, day));
         }
 
         function isTodayBirthday(birthdate) {
@@ -50,41 +49,19 @@
             return today.getMonth() === birthDate.getMonth() && today.getDate() === birthDate.getDate();
         }
 
-        function calculateAge(birthdate) {
-            const today = new Date();
-            const birthDate = createUTCDateFromString(birthdate); // Use the helper function
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDifference = today.getMonth() - birthDate.getMonth();
-            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            return age;
-        }
-
-        function calculateNextAge(birthdate) {
-            const today = new Date();
-            const birthDate = createUTCDateFromString(birthdate); // Use the helper function
-            const currentAge = calculateAge(birthdate);
-            const monthDifference = today.getMonth() - birthDate.getMonth();
-            const isUpcoming = monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate());
-            return isUpcoming ? currentAge + 1 : currentAge + 1;
-        }
-
         function getNextBirthday(birthdates) {
             const today = new Date();
-            let closest = null;
             let closestDate = null;
+            let closestDiff = Infinity;
+
             for (let birthdate of birthdates) {
                 const bdayThisYear = createUTCDateFromString(`${today.getFullYear()}-${birthdate.date.split('-')[1]}-${birthdate.date.split('-')[2]}`);
                 const bdayNextYear = createUTCDateFromString(`${today.getFullYear() + 1}-${birthdate.date.split('-')[1]}-${birthdate.date.split('-')[2]}`);
-        
-                const diffThisYear = bdayThisYear - today;
-                const diffNextYear = bdayNextYear - today;
-        
-                const diff = diffThisYear >= 0 ? diffThisYear : diffNextYear;
-        
-                if (closest === null || diff < closest) {
-                    closest = diff;
+
+                const diff = bdayThisYear >= today ? bdayThisYear - today : bdayNextYear - today;
+
+                if (diff < closestDiff && diff > 0) {
+                    closestDiff = diff;
                     closestDate = birthdate;
                 }
             }
@@ -111,35 +88,41 @@
                 { name: 'Laurie', date: '1990-02-04', birthdateDisplay: 'February 4, 1990' }
             ];
 
-            const sortedBirthdates = sortByDate(birthdates);
             const nextBirthdayName = getNextBirthday(birthdates);
 
             let tableContent = '';
-            sortedBirthdates.forEach(birthdate => {
-                const currentAge = calculateAge(birthdate.date);
-                const nextAge = calculateNextAge(birthdate.date);
-                
-                // Apply 'blinking' if today is their birthday, otherwise 'upcoming' for the next birthday
+            birthdates.forEach(birthdate => {
                 const rowClass = isTodayBirthday(birthdate.date) ? 'class="blinking"' : (birthdate.name === nextBirthdayName ? 'class="upcoming"' : '');
                 
                 tableContent += `
                     <tr ${rowClass}>
                         <td>${birthdate.name}</td>
                         <td>${birthdate.birthdateDisplay}</td>
-                        <td style="text-decoration: underline;">${currentAge}</td>
-                        <td>${nextAge}</td>
+                        <td>${calculateAge(birthdate.date)}</td>
+                        <td>${calculateAge(birthdate.date) + 1}</td>
                     </tr>
                 `;
             });
 
             document.getElementById('family-table').innerHTML = tableContent;
 
-            // Scroll to the highlighted (upcoming) row
+            // Scroll to the next upcoming birthday row, if any
             const upcomingRow = document.querySelector('.upcoming');
             if (upcomingRow) {
                 upcomingRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
+
+        function calculateAge(birthdate) {
+            const today = new Date();
+            const birthDate = createUTCDateFromString(birthdate);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDifference = today.getMonth() - birthDate.getMonth();
+            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
     </script>
 </head>
 <body>
