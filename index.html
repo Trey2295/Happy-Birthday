@@ -27,6 +27,16 @@
         .upcoming {
             background-color: #ffeb3b; /* Highlight color for the next upcoming birthday */
         }
+
+        .blinking {
+    animation: blink 1s step-start 0s infinite;
+    }
+    
+    @keyframes blink {
+        50% { background-color: #ffeb3b; } /* Same as the 'upcoming' color */
+        100% { background-color: transparent; }
+    }
+
     </style>
     <script>
         // Helper function to create a UTC date without timezone shift
@@ -34,6 +44,13 @@
             const [year, month, day] = dateString.split('-').map(Number); // Extract year, month, day
             return new Date(Date.UTC(year, month - 1, day)); // Month is 0-indexed in JavaScript, so subtract 1
         }
+
+        function isTodayBirthday(birthdate) {
+            const today = new Date();
+            const birthDate = createUTCDateFromString(birthdate);
+            return today.getMonth() === birthDate.getMonth() && today.getDate() === birthDate.getDate();
+        }
+
 
         function calculateAge(birthdate) {
             const today = new Date();
@@ -97,7 +114,7 @@
                 { name: 'Vada', date: '2012-10-29', birthdateDisplay: 'October 29, 2012' },
                 { name: 'Mom', date: '1956-10-06', birthdateDisplay: 'October 6, 1956' },
                 { name: 'Dad', date: '1953-10-18', birthdateDisplay: 'October 18, 1953' },
-                { name: 'Renea', date: '2017-11-03', birthdateDisplay: 'November 3, 2017' },
+                { name: 'Renae', date: '2017-11-03', birthdateDisplay: 'November 3, 2017' },
                 { name: 'Wife', date: '1983-12-02', birthdateDisplay: 'December 2, 1983' },
                 { name: 'Rozy', date: '1981-12-16', birthdateDisplay: 'December 16, 1981' },
                 { name: 'Tammy', date: '1956-12-23', birthdateDisplay: 'December 23, 1956' },
@@ -109,18 +126,21 @@
 
             let tableContent = '';
             sortedBirthdates.forEach(birthdate => {
-                const currentAge = calculateAge(birthdate.date);
-                const nextAge = calculateNextAge(birthdate.date);
-                const rowClass = birthdate.name === nextBirthdayName ? 'class="upcoming"' : '';
-                tableContent += `
-                    <tr ${rowClass}>
-                        <td>${birthdate.name}</td>
-                        <td>${birthdate.birthdateDisplay}</td> <!-- Static birthdate display -->
-                        <td style="text-decoration: underline;">${currentAge}</td>
-                        <td>${nextAge}</td>
-                    </tr>
-                `;
-            });
+            const currentAge = calculateAge(birthdate.date);
+            const nextAge = calculateNextAge(birthdate.date);
+        
+            // Apply 'blinking' if today is their birthday, otherwise 'upcoming' for the next birthday
+            const rowClass = isTodayBirthday(birthdate.date) ? 'class="blinking"' : (birthdate.name === nextBirthdayName ? 'class="upcoming"' : '');
+        
+            tableContent += `
+                <tr ${rowClass}>
+                    <td>${birthdate.name}</td>
+                    <td>${birthdate.birthdateDisplay}</td>
+                    <td style="text-decoration: underline;">${currentAge}</td>
+                    <td>${nextAge}</td>
+                </tr>
+            `;
+        });
 
             document.getElementById('family-table').innerHTML = tableContent;
 
