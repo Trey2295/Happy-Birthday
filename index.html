@@ -113,36 +113,38 @@
         document.addEventListener('DOMContentLoaded', function() {
             const birthdates = [
                 { name: 'Laurie', date: '1990-02-04', birthdateDisplay: 'February 4, 1990' },
-                { name: 'Leon', date: '2020-02-19', birthdateDisplay: 'February 19, 2020', gradeBase: 1, gradBaseSchoolYear: 2025 },
+                { name: 'Leon', date: '2020-02-19', birthdateDisplay: 'February 19, 2020', gradeBase: 1, gradeBaseSchoolYear: 2025 },
                 { name: 'Miran', date: '1938-03-04', birthdateDisplay: 'March 4, 1938' },
                 { name: 'Brother', date: '1988-03-15', birthdateDisplay: 'March 15, 1988' },
                 { name: 'Jordan', date: '1982-07-30', birthdateDisplay: 'July 30, 1982' },
                 { name: 'Ginny', date: '1945-08-29', birthdateDisplay: 'August 29, 1945' },
-                { name: 'Enzo', date: '2014-09-04', birthdateDisplay: 'September 4, 2014', gradeBase: 5, gradBaseSchoolYear: 2025 },
+                { name: 'Enzo', date: '2014-09-04', birthdateDisplay: 'September 4, 2014', gradeBase: 5, gradeBaseSchoolYear: 2025 },
                 { name: 'Cody', date: '2022-09-19', birthdateDisplay: 'September 19, 2022' },                
                 { name: 'Mom', date: '1956-10-06', birthdateDisplay: 'October 6, 1956' },
                 { name: 'Dad', date: '1953-10-18', birthdateDisplay: 'October 18, 1953' },
-                { name: 'Vada', date: '2012-10-29', birthdateDisplay: 'October 29, 2012', gradeBase: 7, gradBaseSchoolYear: 2025 },
-                { name: 'Renae', date: '2017-11-03', birthdateDisplay: 'November 3, 2017', gradeBase: 2, gradBaseSchoolYear: 2025 },
+                { name: 'Vada', date: '2012-10-29', birthdateDisplay: 'October 29, 2012', gradeBase: 7, gradeBaseSchoolYear: 2025 },
+                { name: 'Renae', date: '2017-11-03', birthdateDisplay: 'November 3, 2017', gradeBase: 2, gradeBaseSchoolYear: 2025 },
                 { name: 'Wife', date: '1983-12-02', birthdateDisplay: 'December 2, 1983' },
                 { name: 'Rozy', date: '1981-12-16', birthdateDisplay: 'December 16, 1981' },
                 { name: 'Tammy', date: '1956-12-23', birthdateDisplay: 'December 23, 1956' }                
             ];
 
             const nextBirthdayName = getNextBirthday(birthdates);
-            const gradeLabel = computeCurrentGradeLabel(birthdate);
+            
 
             let tableContent = '';
-            birthdates.forEach(birthdate => {
-            let rowClasses = [];
-            if (isTodayBirthday(birthdate.date)) {
-                rowClasses.push('blinking');
-            } else if (birthdate.name === nextBirthdayName) {
-                rowClasses.push('upcoming');
-            }
-        
+            birthdates.forEach(birthdate => {                
+                let rowClasses = [];
+                
+                if (isTodayBirthday(birthdate.date)) {
+                    rowClasses.push('blinking');
+                } else if (birthdate.name === nextBirthdayName) {
+                    rowClasses.push('upcoming');
+                }
+            
             const rowClass = rowClasses.length > 0 ? `class="${rowClasses.join(' ')}"` : '';
             const currentAge = calculateAge(birthdate.date);
+            const gradeLabel = computeCurrentGradeLabel(birthdate);
         
             tableContent += `
                 <tr ${rowClass}>
@@ -190,6 +192,7 @@
     </table>
 </body>
 </html>
+
 
 
 
